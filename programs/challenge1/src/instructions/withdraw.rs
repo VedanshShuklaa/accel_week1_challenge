@@ -1,4 +1,4 @@
-use anchor_lang::{accounts::program, prelude::*};
+use anchor_lang::prelude::*;
 use crate::{state::VaultState, state::WhitelistEntry};
 use anchor_spl::token_interface::{
     TokenAccount,
@@ -7,6 +7,8 @@ use anchor_spl::token_interface::{
     TransferChecked,
     transfer_checked,
 };
+
+use crate::error::VaultError;
 
 #[derive(Accounts)]
 pub struct Withdraw<'info> {
@@ -18,7 +20,7 @@ pub struct Withdraw<'info> {
     #[account(
         seeds=[b"whitelist", vault_state.key().as_ref(), user.key().as_ref()],
         bump = whitelist.bump,
-        constraint = whitelist.vault == vault_state.key() @ VaultError::InvalidVault,
+        constraint = whitelist.vault == vault_state.key()
     )]
     pub whitelist: Account<'info, WhitelistEntry>,
 
@@ -53,9 +55,11 @@ impl<'info> Withdraw<'info> {
         require!(amount <= self.whitelist.max_amount, VaultError::AmountExceedsLimit);
         require!(amount > 0, VaultError::InvalidAmount);
 
+        let vault_state = self.vault_state.key();
+
         let seeds = [
             b"vault-authority",
-            self.vault_state.key().as_ref(),
+            vault_state.as_ref(),
             &[self.vault_state.vault_authority_bump],
         ];
 
@@ -65,11 +69,13 @@ impl<'info> Withdraw<'info> {
             mint: self.mint.to_account_info(),
             authority: self.vault_authority.to_account_info(),
         };
+        
+        let binding = [seeds.as_ref()];
 
         let cpi_context = CpiContext::new_with_signer(
             self.token_program.to_account_info(),
             cpi_accounts,
-            &[seeds.as_ref()]
+            &binding
         );
 
         transfer_checked(cpi_context, amount, 6)?;

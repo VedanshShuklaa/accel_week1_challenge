@@ -22,4 +22,7 @@ pub enum VaultError {
 
     #[msg("Invalid amount")]
     InvalidAmount,
+
+    #[msg("Invalid Vault")]
+    InvalidVault,
 }

@@ -1,4 +1,4 @@
-use anchor_lang::{accounts::program, prelude::*};
+use anchor_lang::prelude::*;
 use crate::{state::VaultState, state::WhitelistEntry};
 use anchor_spl::token_interface::{
     TokenAccount,
@@ -7,6 +7,8 @@ use anchor_spl::token_interface::{
     TransferChecked,
     transfer_checked,
 };
+
+use crate::error::VaultError;
 
 #[derive(Accounts)]
 pub struct Deposit<'info> {

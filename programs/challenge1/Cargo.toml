@@ -14,15 +14,15 @@ cpi = ["no-entrypoint"]
 no-entrypoint = []
 no-idl = []
 no-log-ix-name = []
-idl-build = ["anchor-lang/idl-build"]
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
 anchor-debug = []
 custom-heap = []
 custom-panic = []
 
 
 [dependencies]
-anchor-lang = { version = "0.31.1", features = ["interface-instructions", "init-if-needed"] }
-anchor-spl = "0.31.1"
+anchor-lang = { version = "0.32.1", features = ["interface-instructions"] }
+anchor-spl = "0.32.1"
 # Library for easy management of 8-byte discriminators
 spl-discriminator = "0.5.1"
 # Library defining a generic state interface to encode additional required accounts for an instruction, using Type-Length-Value structures
@@ -31,9 +31,24 @@ spl-tlv-account-resolution = "0.11.1"
 spl-transfer-hook-interface = "2.1.0"
 
 [dev-dependencies]
-litesvm = "0.6.1"
-litesvm-token = "0.6.1"
-
+litesvm = "0.9.1"
+litesvm-token = "0.9.1"
+solana-account = "3.4"
+solana-address = "2.1"
+solana-hash = "4.1"
+solana-instruction = "3.1"
+solana-keypair = "3.1"
+solana-message = "3.0"
+solana-native-token = "3.0"
+solana-sdk-ids = "3.1"
+solana-signer = "3.0"
+solana-system-interface = "3.0"
+solana-transaction = "3.0"
+solana-clock = "~3.0"
+solana-pubkey = "3.0"
+spl-token-2022 = { version = "8.0.1", features = ["no-entrypoint"] }
+spl-associated-token-account = "6.0.0"
+sha2 = "0.10"
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }
